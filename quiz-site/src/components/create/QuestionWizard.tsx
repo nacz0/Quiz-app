@@ -1,64 +1,80 @@
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, UseFormGetValues } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { SingleAnswer } from "./SingleAnswer";
-import { useState } from "react";
-import { type QuizFormValues, quizSchema } from "./zodSchema";
+import { useEffect, useRef, useState } from "react";
+import {
+  type QuizFormValues,
+  quizSchema,
+} from "../../types&schemas/quizSchema";
+import {
+  UseLocalStorageGet,
+  UseLocalStorageSet,
+} from "~/hooks/useLocalStorage";
+import { nanoid } from "nanoid";
 export function QuestionWizard() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
+  const setValues = UseLocalStorageSet("quiz");
 
+  const defaultValues = {
+    quiz: {
+      title: "",
+      description: "",
+      image: "",
+    },
+    questions: [
+      {
+        question: "",
+        answers: [
+          {
+            text: "",
+            isCorrect: false,
+            image: "",
+          },
+          {
+            text: "",
+            isCorrect: false,
+            image: "",
+          },
+          {
+            text: "",
+            isCorrect: false,
+            image: "",
+          },
+          {
+            text: "",
+            isCorrect: false,
+            image: "",
+          },
+        ],
+      },
+    ],
+  };
   const {
     register,
     handleSubmit,
     control,
-    watch,
+    getValues,
+    reset,
     formState: { errors },
   } = useForm<QuizFormValues>({
-    defaultValues: {
-      quiz: {
-        title: "",
-        description: "",
-        image: "",
-      },
-      questions: [
-        {
-          question: "",
-          answers: [
-            {
-              text: "",
-              correct: false,
-              image: "",
-            },
-            {
-              text: "",
-              correct: false,
-              image: "",
-            },
-            {
-              text: "",
-              correct: false,
-              image: "",
-            },
-            {
-              text: "",
-              correct: false,
-              image: "",
-            },
-          ],
-        },
-      ],
-    },
+    defaultValues: defaultValues,
     resolver: zodResolver(quizSchema),
   });
   const { fields, append, remove } = useFieldArray({
     control,
     name: "questions",
   });
+  console.log("render");
 
-  console.log(watch());
+  useEffect(() => {
+    setValues(getValues);
+  });
+  UseLocalStorageGet("quiz", reset, quizSchema);
 
   return (
     <div>
+      <button onClick={() => reset(defaultValues)}>reset</button>
       <form
         onSubmit={handleSubmit((data) => {
           console.log(data);
@@ -71,7 +87,10 @@ export function QuestionWizard() {
                 {index}
               </button>
             ))}
-            <button onClick={() => append({ question: "", answers: [] })}>
+            <button
+              type="button"
+              onClick={() => append({ question: "", answers: [] })}
+            >
               Add Question
             </button>
           </div>

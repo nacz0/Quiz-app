@@ -1,24 +1,14 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "sqlite"
-    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url      = env("DATABASE_URL")
+  provider = "mysql"
+  url = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-}
 
 // Necessary for Next auth
 model Account {
@@ -37,6 +27,7 @@ model Account {
     user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
+    @@index([userId])
 }
 
 model Session {
@@ -45,6 +36,8 @@ model Session {
     userId       String
     expires      DateTime
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId, sessionToken])
 }
 
 model User {
@@ -55,6 +48,7 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+    quizzes       Quiz[]
 }
 
 model VerificationToken {
@@ -63,4 +57,40 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Quiz {
+    id          String   @id @default(cuid())
+    title       String
+    description String?
+    questions   Question[]
+    image       String?
+    user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId      String
+
+    @@index([userId, title, description])
+}
+
+model Question {
+    id          String   @id @default(cuid())
+    title       String
+    description String?
+    answers     Answer[]
+    ytLink     String?
+    image      String?
+    quiz        Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+    quizId      String
+
+    @@index([quizId])
+}
+
+model Answer {
+    id          String   @id @default(cuid())
+    text       String
+    isCorrect   Boolean
+    image     String?
+    question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+    questionId  String
+
+    @@index([questionId])
 }

@@ -1,5 +1,5 @@
 import { type UseFormRegister } from "react-hook-form";
-import { type QuizFormValues } from "./zodSchema";
+import { type QuizFormValues } from "../../types&schemas/quizSchema";
 
 export function SingleAnswer(props: {
   currentQuestion: number;
@@ -28,9 +28,9 @@ export function SingleAnswer(props: {
             <input
               type="checkbox"
               {...register(
-                `questions.${currentQuestion}.answers.${answer}.correct`
+                `questions.${currentQuestion}.answers.${answer}.isCorrect`
               )}
-              key={`questions.${currentQuestion}.answers.${answer}.correct`}
+              key={`questions.${currentQuestion}.answers.${answer}.isCorrect`}
             ></input>
           </div>
         ))}
