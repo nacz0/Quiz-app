@@ -73,8 +73,7 @@ model Quiz {
 
 model Question {
     id          String   @id @default(cuid())
-    title       String
-    description String?
+    text        String
     answers     Answer[]
     ytLink     String?
     image      String?
