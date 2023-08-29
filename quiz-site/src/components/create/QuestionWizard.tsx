@@ -11,8 +11,11 @@ import {
   UseLocalStorageGet,
   UseLocalStorageSet,
 } from "~/hooks/useLocalStorage";
-import { nanoid } from "nanoid";
+import { api } from "~/utils/api";
 export function QuestionWizard() {
+  const { mutate } = api.quiz.createQuiz.useMutation({
+    onSuccess: (data) => console.log(data),
+  });
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const setValues = UseLocalStorageSet("quiz");
 
@@ -25,6 +28,8 @@ export function QuestionWizard() {
     questions: [
       {
         question: "",
+        ytLink: "",
+        image: "",
         answers: [
           {
             text: "",
@@ -59,7 +64,6 @@ export function QuestionWizard() {
     formState: { errors },
   } = useForm<QuizFormValues>({
     defaultValues: defaultValues,
-    resolver: zodResolver(quizSchema),
   });
   const { fields, append, remove } = useFieldArray({
     control,
@@ -74,22 +78,29 @@ export function QuestionWizard() {
 
   return (
     <div>
-      <button onClick={() => reset(defaultValues)}>reset</button>
+      <button type="button" onClick={() => reset(defaultValues)}>
+        reset
+      </button>
       <form
         onSubmit={handleSubmit((data) => {
           console.log(data);
+          mutate(data);
         })}
       >
         <div className="flex gap-4">
           <div className="flex flex-col bg-yellow-300 p-3">
             {fields.map((field, index) => (
-              <button onClick={() => setCurrentQuestion(index)} key={field.id}>
+              <button
+                type="button"
+                onClick={() => setCurrentQuestion(index)}
+                key={field.id}
+              >
                 {index}
               </button>
             ))}
             <button
               type="button"
-              onClick={() => append({ question: "", answers: [] })}
+              onClick={() => append({ text: "", answers: [] })}
             >
               Add Question
             </button>

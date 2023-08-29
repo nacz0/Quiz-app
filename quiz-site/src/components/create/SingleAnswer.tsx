@@ -10,8 +10,8 @@ export function SingleAnswer(props: {
   return (
     <div>
       <input
-        key={`questions.${currentQuestion}.question`}
-        {...register(`questions.${currentQuestion}.question`)}
+        key={`questions.${currentQuestion}.text`}
+        {...register(`questions.${currentQuestion}.text`)}
       ></input>
 
       <div className="flex flex-col gap-4 bg-red-400 p-4">
