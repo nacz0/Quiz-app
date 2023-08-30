@@ -12,6 +12,7 @@ import {
   UseLocalStorageSet,
 } from "~/lib/hooks/useLocalStorage";
 import { api } from "~/utils/api";
+import { ImageInput } from "./ImageInput";
 export function QuestionWizard() {
   const { mutate } = api.quiz.createQuiz.useMutation({
     onSuccess: (data) => console.log(data),
@@ -127,7 +128,7 @@ export function QuestionWizard() {
             {errors.quiz?.description && (
               <p>{errors.quiz.description.message}</p>
             )}
-            <input {...register("quiz.image")}></input>
+            <ImageInput input="quiz.image" setValue={setValue} />
             {errors.quiz?.image && <p>{errors.quiz.image.message}</p>}
           </div>
           <button type="submit">submit</button>

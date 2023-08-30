@@ -1,6 +1,6 @@
 import { type UseFormSetValue, type UseFormRegister } from "react-hook-form";
 import { type QuizFormValues } from "../../types&schemas/quizSchema";
-import { compressFileInputImg } from "~/lib/functions/compressFileInputImg";
+import { ImageInput } from "./ImageInput";
 
 export function SingleAnswer(props: {
   currentQuestion: number;
@@ -10,32 +10,6 @@ export function SingleAnswer(props: {
   const { currentQuestion, register, setValue } = props;
   const numOfAnswers = [0, 1, 2, 3];
 
-  function ImageInput() {
-    const handleFileInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!e.target.files) return;
-      const file = e.target.files[0];
-      if (!file) return;
-      const compressedImg = await compressFileInputImg(file, 720, 0.5);
-      if (!compressedImg) return;
-      setValue(`questions.${currentQuestion}.image`, compressedImg);
-    };
-    return (
-      <>
-        <label htmlFor="fileInput" className=" cursor-pointer">
-          <div className="">
-            <span className="text-xs font-semibold">IMAGE</span>
-          </div>
-        </label>
-        <input
-          id="fileInput"
-          type="file"
-          accept=".jpg, .jpeg, .png"
-          onChange={handleFileInput}
-          className="hidden"
-        />
-      </>
-    );
-  }
   return (
     <div>
       <div className="flex flex-col gap-3">
@@ -49,7 +23,10 @@ export function SingleAnswer(props: {
           {...register(`questions.${currentQuestion}.ytLink`)}
           placeholder="Youtube link"
         ></input>
-        <ImageInput />
+        <ImageInput
+          input={`questions.${currentQuestion}.image`}
+          setValue={setValue}
+        />
         <input
           type="number"
           min={0}
