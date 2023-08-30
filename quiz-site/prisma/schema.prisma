@@ -66,7 +66,7 @@ model Quiz {
     title       String
     description String?
     questions   Question[]
-    image       String?
+    image       String? @db.MediumText
     user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId      String
 
@@ -84,7 +84,7 @@ model Question {
     text        String
     answers     Answer[]
     ytLink     String?
-    image      String?
+    image      String? @db.MediumText
     answerTime Int
     type      QuestionType
     quiz        Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
