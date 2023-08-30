@@ -2,7 +2,7 @@ import { useForm, useFieldArray, UseFormGetValues } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { SingleAnswer } from "./SingleAnswer";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   type QuizFormValues,
   quizSchema,
@@ -27,9 +27,11 @@ export function QuestionWizard() {
     },
     questions: [
       {
-        question: "",
+        text: "",
         ytLink: "",
         image: "",
+        answerTime: 20,
+
         answers: [
           {
             text: "",
@@ -64,12 +66,15 @@ export function QuestionWizard() {
     formState: { errors },
   } = useForm<QuizFormValues>({
     defaultValues: defaultValues,
+    resolver: zodResolver(quizSchema),
   });
   const { fields, append, remove } = useFieldArray({
     control,
     name: "questions",
   });
   console.log("render");
+  console.log(getValues());
+  console.log(errors);
 
   useEffect(() => {
     setValues(getValues);
@@ -100,7 +105,16 @@ export function QuestionWizard() {
             ))}
             <button
               type="button"
-              onClick={() => append({ text: "", answers: [] })}
+              onClick={() =>
+                append({
+                  text: "",
+                  answers: [],
+                  ytLink: "",
+                  image: "",
+                  answerTime: 20,
+                  type: "answers",
+                })
+              }
             >
               Add Question
             </button>
