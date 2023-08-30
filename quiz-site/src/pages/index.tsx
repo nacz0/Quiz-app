@@ -16,8 +16,8 @@ export default function Home() {
       </Head>
       <main>
         <Navbar />
-        <div className="mt-4  flex flex-col items-center  overflow-auto bg-white">
-          <div className="flex h-[700px] w-full flex-col items-center gap-2 px-6 ">
+        <div className=" flex   flex-col items-center  overflow-auto bg-white">
+          <div className="mt-4 flex  h-full w-full flex-col items-center gap-2 px-4 ">
             {sessionData && (
               <>
                 <div className="w-full rounded-lg bg-teal-50 p-5  text-xl font-normal">
