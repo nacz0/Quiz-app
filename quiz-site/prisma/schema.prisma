@@ -61,6 +61,8 @@ model VerificationToken {
 
 model Quiz {
     id          String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
     title       String
     description String?
     questions   Question[]
@@ -70,6 +72,12 @@ model Quiz {
 
     @@index([userId, title, description])
 }
+enum QuestionType {
+    answers
+    true_false
+    input
+    slider
+}
 
 model Question {
     id          String   @id @default(cuid())
@@ -77,6 +85,8 @@ model Question {
     answers     Answer[]
     ytLink     String?
     image      String?
+    answerTime Int
+    type      QuestionType
     quiz        Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
     quizId      String
 
