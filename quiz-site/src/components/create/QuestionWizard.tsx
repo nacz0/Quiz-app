@@ -10,7 +10,7 @@ import {
 import {
   UseLocalStorageGet,
   UseLocalStorageSet,
-} from "~/hooks/useLocalStorage";
+} from "~/lib/hooks/useLocalStorage";
 import { api } from "~/utils/api";
 export function QuestionWizard() {
   const { mutate } = api.quiz.createQuiz.useMutation({
@@ -62,6 +62,7 @@ export function QuestionWizard() {
     handleSubmit,
     control,
     getValues,
+    setValue,
     reset,
     formState: { errors },
   } = useForm<QuizFormValues>({
@@ -130,7 +131,11 @@ export function QuestionWizard() {
             {errors.quiz?.image && <p>{errors.quiz.image.message}</p>}
           </div>
           <button type="submit">submit</button>
-          <SingleAnswer register={register} currentQuestion={currentQuestion} />
+          <SingleAnswer
+            setValue={setValue}
+            register={register}
+            currentQuestion={currentQuestion}
+          />
         </div>
       </form>
     </div>
