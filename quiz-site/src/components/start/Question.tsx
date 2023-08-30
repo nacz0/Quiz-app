@@ -8,7 +8,7 @@ import {
 import type { User, question } from "./Start";
 import { socket } from "~/socket/socket";
 import { type gameStates } from "~/types&schemas/gameStates";
-import { Timer } from "../timer";
+import { Timer } from "../Timer";
 export function Question(props: {
   question: question;
   pin: string;

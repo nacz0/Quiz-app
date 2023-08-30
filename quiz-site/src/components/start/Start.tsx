@@ -4,7 +4,9 @@ import { type RouterOutputs } from "~/utils/api";
 import { Question } from "./Question";
 import { socket } from "~/socket/socket";
 import { type gameStates } from "~/types&schemas/gameStates";
-import { Timer } from "../timer";
+import { Timer } from "../Timer";
+import { motion } from "framer-motion";
+
 type data = RouterOutputs["quiz"]["getQuizById"];
 
 export type question = data["questions"][number];
@@ -26,7 +28,7 @@ export function Start(props: { quizId: string; data: data }) {
     return () => {
       socket.off("start_game");
     };
-  }, []);
+  }, [quizId]);
 
   useEffect(() => {
     socket.on("game_started", (pin) => {
@@ -60,7 +62,7 @@ export function Start(props: { quizId: string; data: data }) {
   function handlePlay() {
     setGameState("loading");
     socket.emit("next_question", pin);
-    const delay = 1000 * 1.5;
+    const delay = 1000 * 5.5;
 
     if (currentQuestion <= data.questions.length - 1) {
       const timeout = setTimeout(() => {
@@ -71,7 +73,7 @@ export function Start(props: { quizId: string; data: data }) {
         clearTimeout(timeout);
       };
     } else {
-      socket.timeout(delay).emit("end_game", pin);
+      socket.emit("end_game", pin);
       setGameState("finished");
     }
   }
@@ -83,6 +85,7 @@ export function Start(props: { quizId: string; data: data }) {
     <div>
       {gameState === "lobby" && <button onClick={startGame}>start</button>}
       <div>{pin}</div>
+
       <div>
         {users.map((user) => (
           <div key={user.name}>{user.name}</div>
@@ -98,7 +101,12 @@ export function Start(props: { quizId: string; data: data }) {
           users={users}
         />
       )}
-      {gameState === "loading" && <div>loading</div>}
+      {gameState === "loading" && (
+        <div>
+          <Timer seconds={5} />
+          <div className="mb-10">loading</div>
+        </div>
+      )}
       {gameState === "waiting" && (
         <>
           <div>
