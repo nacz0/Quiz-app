@@ -11,6 +11,17 @@ export const searchRouter = createTRPCRouter({
       where: {
         userId: ctx.session.user.id,
       },
+      select: {
+        _count: {
+          select: {
+            questions: true,
+          },
+        },
+        id: true,
+        title: true,
+        description: true,
+        image: true,
+      },
       take: 3,
       orderBy: {
         createdAt: "desc",
