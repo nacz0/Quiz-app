@@ -11,7 +11,7 @@ export const quizRouter = createTRPCRouter({
     .input(quizSchema)
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id;
-
+      console.log(input);
       const quiz = await ctx.prisma.quiz.create({
         data: {
           title: input.quiz.title,
@@ -29,12 +29,17 @@ export const quizRouter = createTRPCRouter({
             },
           })
       );*/
+      console.log("questions");
+      console.log(input);
+      console.log(input.questions[0]?.answers);
       await ctx.prisma.question.createMany({
         data: input.questions.map((question) => ({
           text: question.text,
           ytLink: question.ytLink,
           image: question.image,
           quizId: quiz.id,
+          answerTime: 20,
+          type: "answers",
         })),
       });
       const questions = await ctx.prisma.question.findMany({
