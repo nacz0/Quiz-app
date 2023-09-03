@@ -1,19 +1,19 @@
 import { z } from "zod";
 
 const savedDraftQuestionSchema = z.object({
-  text: z.string().optional(),
-  ytLink: z.string().optional(),
-  image: z.string().optional(),
+  text: z.string().nullish(),
+  ytLink: z.string().nullish(),
+  image: z.string().nullish(),
   answerTime: z.number().optional(),
-  id: z.string().optional(),
-  type: z.enum(["answers", "true_false", "input", "slider"]).optional(),
+  id: z.string().nullish(),
+  type: z.enum(["answers", "true_false", "input", "slider"]).nullish(),
   answers: z
     .array(
       z.object({
-        text: z.string().optional(),
-        isCorrect: z.boolean().optional(),
-        image: z.string().optional(),
-        id: z.string().optional(),
+        text: z.string().nullish(),
+        isCorrect: z.boolean().nullish(),
+        image: z.string().nullish(),
+        id: z.string().nullish(),
       })
     )
     .min(4)
@@ -22,9 +22,9 @@ const savedDraftQuestionSchema = z.object({
 
 export const savedDraftQuizSchema = z.object({
   quiz: z.object({
-    title: z.string().max(250).optional(),
-    description: z.string().optional(),
-    image: z.string().optional(),
+    title: z.string().max(250).nullish(),
+    description: z.string().nullish(),
+    image: z.string().nullish(),
     id: z.string(),
   }),
   questions: z.array(savedDraftQuestionSchema),
