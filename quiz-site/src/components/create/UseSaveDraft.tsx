@@ -4,35 +4,40 @@ import type { UseFormGetValues } from "react-hook-form";
 import deepEqual from "deep-equal";
 import { defaultQuizValues } from "./defaultQuizValues";
 import { useInitDraft } from "./useInitDraft";
-import type { DraftQuizValues } from "~/types&schemas/draftSchema";
+import type { savedDraftQuizValues } from "~/types&schemas/savedDraftSchema";
 
 export function UseSaveDraft(
   isLoading: boolean,
   isSuccess: boolean,
   alreadySaved: boolean
 ) {
-  const { mutate } = api.quiz.createDraftQuiz.useMutation();
-  const getValuesRef = useRef<null | UseFormGetValues<DraftQuizValues>>(null);
+  const { mutate } = api.quiz.updateDraftQuiz.useMutation();
+  const getValuesRef = useRef<null | UseFormGetValues<savedDraftQuizValues>>(
+    null
+  );
   useEffect(() => {
     function saveDraft() {
       if (isLoading || isSuccess) {
         return;
       }
-      if (getValuesRef.current) {
+      if (getValuesRef.current && document.visibilityState === "hidden") {
         const values = getValuesRef.current();
         if (!deepEqual(values, defaultQuizValues)) {
           mutate(values);
+          setTimeout(() => {
+            console.log("saved");
+          }, 1000);
         }
       }
     }
 
-    window.addEventListener("beforeunload", saveDraft);
+    document.addEventListener("visibilitychange", saveDraft);
     return () => {
-      window.removeEventListener("beforeunload", saveDraft);
+      document.removeEventListener("visibilitychange", saveDraft);
     };
   }, [isLoading, isSuccess, mutate]);
 
-  function setValues(getValues: UseFormGetValues<DraftQuizValues>) {
+  function setValues(getValues: UseFormGetValues<savedDraftQuizValues>) {
     getValuesRef.current = getValues;
   }
   useInitDraft(getValuesRef, alreadySaved);

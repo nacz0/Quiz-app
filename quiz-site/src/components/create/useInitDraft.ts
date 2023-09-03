@@ -3,10 +3,11 @@ import { type MutableRefObject, useEffect, useState } from "react";
 import type { UseFormGetValues } from "react-hook-form";
 import { defaultQuizValues } from "./defaultQuizValues";
 import { api } from "~/utils/api";
-import type { DraftQuizValues } from "~/types&schemas/draftSchema";
+import { draftQuizSchema } from "~/types&schemas/draftSchema";
+import type { savedDraftQuizValues } from "~/types&schemas/savedDraftSchema";
 
 export function useInitDraft(
-  getValuesRef: MutableRefObject<null | UseFormGetValues<DraftQuizValues>>,
+  getValuesRef: MutableRefObject<null | UseFormGetValues<savedDraftQuizValues>>,
   alreadySaved: boolean
 ) {
   const [isInitialized, setIsInitialized] = useState(false);

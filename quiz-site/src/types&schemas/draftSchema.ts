@@ -23,7 +23,6 @@ export const draftQuizSchema = z.object({
     title: z.string().max(250).nullish(),
     description: z.string().nullish(),
     image: z.string().nullish(),
-    id: z.string(),
   }),
   questions: z.array(draftQuestionSchema),
 });
