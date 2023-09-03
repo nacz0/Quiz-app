@@ -2,20 +2,22 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SingleAnswer } from "./SingleAnswer";
 import { useEffect, useState } from "react";
-import {
-  type QuizFormValues,
-  quizSchema,
-} from "../../types&schemas/quizSchema";
+import { quizSchema } from "../../types&schemas/quizSchema";
 import { api } from "~/utils/api";
 import { ImageInput } from "./ImageInput";
 import { UseSaveDraft } from "./UseSaveDraft";
 import { defaultQuizValues } from "./defaultQuizValues";
-
-export function QuestionWizard(props: { alreadySaved: boolean }) {
+import type { savedDraftQuizValues } from "~/types&schemas/savedDraftSchema";
+import type { DraftQuizValues } from "~/types&schemas/draftSchema";
+export function QuizWizard(props: {
+  alreadySaved: boolean;
+  draftData?: savedDraftQuizValues;
+}) {
   const { alreadySaved } = props;
   const { mutate, isLoading, isSuccess } = api.quiz.createQuiz.useMutation({
     onSuccess: (data) => console.log(data),
   });
+
   const setValues = UseSaveDraft(isLoading, isSuccess, alreadySaved);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [dummy, setDummy] = useState(0);
@@ -27,7 +29,7 @@ export function QuestionWizard(props: { alreadySaved: boolean }) {
     setValue,
     reset,
     formState: { errors },
-  } = useForm<QuizFormValues>({
+  } = useForm<DraftQuizValues>({
     defaultValues: defaultQuizValues,
     resolver: zodResolver(quizSchema),
   });
@@ -39,7 +41,10 @@ export function QuestionWizard(props: { alreadySaved: boolean }) {
     setValues(getValues);
   });
   console.log(getValues());
-
+  if (props.draftData) {
+    console.log(props.draftData);
+    reset(props.draftData);
+  }
   return (
     <div>
       <button type="button" onClick={() => reset(defaultQuizValues)}>
@@ -49,7 +54,7 @@ export function QuestionWizard(props: { alreadySaved: boolean }) {
       <form
         onSubmit={handleSubmit((data) => {
           console.log(quizSchema);
-          mutate(data);
+          mutate(quizSchema.parse(data));
         })}
       >
         <div className="flex gap-4">
