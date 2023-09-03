@@ -166,26 +166,6 @@ export const quizRouter = createTRPCRouter({
       );
       return;
     }),
-  getQuizById: publicProcedure
-    .input(z.string())
-    .query(async ({ input, ctx }) => {
-      const quiz = await ctx.prisma.quiz.findFirst({
-        where: {
-          id: input,
-        },
-        include: {
-          questions: {
-            include: {
-              answers: true,
-            },
-          },
-        },
-      });
-      if (!quiz) {
-        throw new Error("Quiz not found");
-      }
-      return quiz;
-    }),
   createDraftQuiz: protectedProcedure
     .input(draftQuizSchema)
     .mutation(async ({ input, ctx }) => {
@@ -238,5 +218,65 @@ export const quizRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       await saveQuiz(input, ctx, true);
       return;
+    }),
+  getQuizById: publicProcedure
+    .input(z.string())
+    .query(async ({ input, ctx }) => {
+      const quiz = await ctx.prisma.quiz.findFirst({
+        where: {
+          id: input,
+          IsDraft: false,
+        },
+        include: {
+          questions: {
+            include: {
+              answers: true,
+            },
+          },
+        },
+      });
+      if (!quiz) {
+        throw new Error("Quiz not found");
+      }
+      return quiz;
+    }),
+  getDraftQuizById: protectedProcedure
+    .input(z.string())
+    .query(async ({ input, ctx }) => {
+      const quiz = await ctx.prisma.quiz.findFirst({
+        where: {
+          id: input,
+          IsDraft: true,
+        },
+        select: {
+          image: true,
+          title: true,
+          description: true,
+          id: true,
+        },
+      });
+      if (!quiz) {
+        throw new Error("Draft not found");
+      }
+      const questions = await ctx.prisma.question.findMany({
+        where: {
+          quizId: input,
+        },
+        select: {
+          text: true,
+          ytLink: true,
+          image: true,
+          answerTime: true,
+          type: true,
+          answers: {
+            select: {
+              text: true,
+              image: true,
+              isCorrect: true,
+            },
+          },
+        },
+      });
+      return { quiz, questions };
     }),
 });
