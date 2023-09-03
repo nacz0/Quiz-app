@@ -3,6 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import Navbar from "~/components/Navbar";
 import { LastQuizzes } from "~/components/index/LastQuizzes";
+import { LocalQuizzes } from "~/components/index/LocalQuizzes";
 import { api } from "~/utils/api";
 
 export default function Home() {
@@ -30,9 +31,12 @@ export default function Home() {
                   </Link>
                   !
                 </div>
+
                 <LastQuizzes />
+                <LocalQuizzes />
               </>
             )}
+            <AuthShowcase />
           </div>
         </div>
       </main>
@@ -48,7 +52,7 @@ function AuthShowcase() {
         {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
       </p>
       <button
-        className="rounded-full bg-white/10 px-10 py-3 font-semibold  no-underline transition hover:bg-white/20"
+        className="rounded-full bg-white/10 px-10 py-3 font-semibold text-black  no-underline transition hover:bg-white/20"
         onClick={sessionData ? () => void signOut() : () => void signIn()}
       >
         {sessionData ? "Sign out" : "Sign in"}

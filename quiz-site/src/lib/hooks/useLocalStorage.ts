@@ -26,12 +26,12 @@ export function UseLocalStorageGet(
   }, [name, initialFunction, schema]);
 }
 
-export function UseLocalStorageSet(name: string) {
-  const getValuesRef = useRef<null | (() => null)>(null);
+export function UseLocalStorageSet(name: string, path: string) {
+  const getValuesRef = useRef<null | ((path: string) => null)>(null);
   useEffect(() => {
     const cleanup = () => {
       if (getValuesRef.current) {
-        const stringifiedData = JSON.stringify(getValuesRef.current());
+        const stringifiedData = JSON.stringify(getValuesRef.current(path));
         localStorage.setItem(name, stringifiedData);
       }
     };
@@ -40,7 +40,7 @@ export function UseLocalStorageSet(name: string) {
     return () => {
       window.removeEventListener("beforeunload", cleanup);
     };
-  }, [name]);
+  }, [name, path]);
 
   function setValues(getValues: () => any) {
     getValuesRef.current = getValues;
