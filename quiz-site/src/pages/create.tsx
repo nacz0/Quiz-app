@@ -1,11 +1,7 @@
 import Head from "next/head";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
-import { QuestionWizard } from "~/components/create/QuestionWizard";
-import { api } from "~/utils/api";
+import { QuizWizard } from "~/components/create/QuizWizard";
 
-export default function Home() {
+export default function Create() {
   return (
     <>
       <Head>
@@ -14,7 +10,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.png" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center ">
-        <QuestionWizard />
+        <QuizWizard alreadySaved={false} />
       </main>
     </>
   );

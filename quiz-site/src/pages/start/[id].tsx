@@ -1,6 +1,4 @@
 import Head from "next/head";
-import { useEffect, useContext } from "react";
-import { io } from "socket.io-client";
 import type { GetStaticProps, NextPage } from "next";
 import { Start } from "~/components/start/Start";
 import { api } from "~/utils/api";
