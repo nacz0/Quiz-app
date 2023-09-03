@@ -63,43 +63,49 @@ model Quiz {
     id          String   @id @default(cuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    title       String
+    title       String?
     description String?
     questions   Question[]
     image       String? @db.MediumText
     user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId      String
+    IsDraft       Boolean  @default(true)
 
     @@index([userId, title, description])
 }
+
+
+model Question {
+    id          String   @id @default(cuid())
+    text        String?
+    answers     Answer[]
+    ytLink     String?
+    image      String? @db.MediumText
+    answerTime Int    @default(20)
+    type      QuestionType
+    quiz        Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+    quizId      String
+    index       Int
+    @@unique([quizId, index], name: "unique_quiz_index")
+    @@index([quizId, index])
+}
+
+model Answer {
+    id          String   @id @default(cuid())
+    text       String?
+    isCorrect   Boolean?
+    image     String?
+    question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+    questionId  String
+    index       Int
+
+    @@unique([questionId, index], name: "unique_question_index")
+    @@index([questionId, index])
+}
+
 enum QuestionType {
     answers
     true_false
     input
     slider
-}
-
-model Question {
-    id          String   @id @default(cuid())
-    text        String
-    answers     Answer[]
-    ytLink     String?
-    image      String? @db.MediumText
-    answerTime Int
-    type      QuestionType
-    quiz        Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
-    quizId      String
-
-    @@index([quizId])
-}
-
-model Answer {
-    id          String   @id @default(cuid())
-    text       String
-    isCorrect   Boolean
-    image     String?
-    question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-    questionId  String
-
-    @@index([questionId])
 }

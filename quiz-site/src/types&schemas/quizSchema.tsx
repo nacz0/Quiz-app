@@ -7,15 +7,16 @@ const questionSchema = z
     image: z.string().optional(),
     answerTime: z.number(),
     type: z.enum(["answers", "true_false", "input", "slider"]),
+    id: z.string().optional(),
     answers: z
       .array(
         z
           .object({
-            text: z.string(),
-            isCorrect: z.boolean(),
-            image: z.string(),
+            text: z.string().optional(),
+            isCorrect: z.boolean().optional(),
+            image: z.string().optional(),
+            id: z.string().optional(),
           })
-          .partial()
           .superRefine(({ text, image }, ctx) => {
             if (
               text !== undefined &&
@@ -73,9 +74,10 @@ const questionSchema = z
 
 export const quizSchema = z.object({
   quiz: z.object({
-    title: z.string().min(1, { message: "Title is required" }),
+    title: z.string().min(1, { message: "Title is required" }).max(250),
     description: z.string().optional(),
     image: z.string().optional(),
+    id: z.string(),
   }),
   questions: z.array(questionSchema),
 });
