@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
 import { api } from "~/utils/api";
 import type { UseFormGetValues } from "react-hook-form";
-import { type QuizFormValues } from "../../types&schemas/quizSchema";
 import deepEqual from "deep-equal";
 import { defaultQuizValues } from "./defaultQuizValues";
 import { useInitDraft } from "./useInitDraft";
+import type { DraftQuizValues } from "~/types&schemas/draftSchema";
 
 export function UseSaveDraft(
   isLoading: boolean,
@@ -12,7 +12,7 @@ export function UseSaveDraft(
   alreadySaved: boolean
 ) {
   const { mutate } = api.quiz.createDraftQuiz.useMutation();
-  const getValuesRef = useRef<null | UseFormGetValues<QuizFormValues>>(null);
+  const getValuesRef = useRef<null | UseFormGetValues<DraftQuizValues>>(null);
   useEffect(() => {
     function saveDraft() {
       if (isLoading || isSuccess) {
@@ -32,7 +32,7 @@ export function UseSaveDraft(
     };
   }, [isLoading, isSuccess, mutate]);
 
-  function setValues(getValues: UseFormGetValues<QuizFormValues>) {
+  function setValues(getValues: UseFormGetValues<DraftQuizValues>) {
     getValuesRef.current = getValues;
   }
   useInitDraft(getValuesRef, alreadySaved);

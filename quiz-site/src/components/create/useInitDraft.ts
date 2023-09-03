@@ -1,12 +1,12 @@
 import deepEqual from "deep-equal";
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { type MutableRefObject, useEffect, useState } from "react";
 import type { UseFormGetValues } from "react-hook-form";
-import type { QuizFormValues } from "~/types&schemas/quizSchema";
 import { defaultQuizValues } from "./defaultQuizValues";
 import { api } from "~/utils/api";
+import type { DraftQuizValues } from "~/types&schemas/draftSchema";
 
 export function useInitDraft(
-  getValuesRef: MutableRefObject<null | UseFormGetValues<QuizFormValues>>,
+  getValuesRef: MutableRefObject<null | UseFormGetValues<DraftQuizValues>>,
   alreadySaved: boolean
 ) {
   const [isInitialized, setIsInitialized] = useState(false);

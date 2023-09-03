@@ -1,9 +1,9 @@
-import { type UseFormSetValue, type RegisterOptions } from "react-hook-form";
+import { type UseFormSetValue } from "react-hook-form";
 import { compressFileInputImg } from "~/lib/functions/compressFileInputImg";
-import { type QuizFormValues } from "~/types&schemas/quizSchema";
+import type { DraftQuizValues } from "~/types&schemas/draftSchema";
 
 export function ImageInput(props: {
-  setValue: UseFormSetValue<QuizFormValues>;
+  setValue: UseFormSetValue<DraftQuizValues>;
   input: "quiz.image" | `questions.${number}.image`;
 }) {
   const { setValue, input } = props;

@@ -1,11 +1,11 @@
 import { type UseFormSetValue, type UseFormRegister } from "react-hook-form";
-import { type QuizFormValues } from "../../types&schemas/quizSchema";
 import { ImageInput } from "./ImageInput";
+import type { DraftQuizValues } from "~/types&schemas/draftSchema";
 
 export function SingleAnswer(props: {
   currentQuestion: number;
-  register: UseFormRegister<QuizFormValues>;
-  setValue: UseFormSetValue<QuizFormValues>;
+  register: UseFormRegister<DraftQuizValues>;
+  setValue: UseFormSetValue<DraftQuizValues>;
 }) {
   const { currentQuestion, register, setValue } = props;
   const numOfAnswers = [0, 1, 2, 3];
