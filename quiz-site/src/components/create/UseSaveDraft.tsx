@@ -24,7 +24,10 @@ export function UseSaveDraft(
       mutate(parsed);
     }, 5000);
     const subscription = watch(debounced);
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      debounced.clear();
+    };
   }, [alreadySaved, isLoading, isSuccess, mutate, watch]);
 
   useInitDraft(watch(), alreadySaved, setValue);
