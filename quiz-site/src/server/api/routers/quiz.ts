@@ -41,14 +41,14 @@ async function saveQuiz(
         text: question.text,
         ytLink: question.ytLink,
         image: question.image,
-        answerTime: question.answerTime,
+        answerTime: Number(question.answerTime),
         type: "answers",
       },
       create: {
         text: question.text,
         ytLink: question.ytLink,
         image: question.image,
-        answerTime: question.answerTime,
+        answerTime: Number(question.answerTime),
         type: "answers",
         quizId: input.quiz.id,
         index: i,
@@ -117,14 +117,14 @@ export const quizRouter = createTRPCRouter({
             text: question.text,
             ytLink: question.ytLink,
             image: question.image,
-            answerTime: question.answerTime,
+            answerTime: Number(question.answerTime),
             type: "answers",
           },
           create: {
             text: question.text,
             ytLink: question.ytLink,
             image: question.image,
-            answerTime: question.answerTime,
+            answerTime: Number(question.answerTime),
             type: "answers",
             quizId: input.quiz.id,
             index: i,
@@ -186,7 +186,7 @@ export const quizRouter = createTRPCRouter({
           ytLink: question.ytLink,
           image: question.image,
           quizId: quiz.id,
-          answerTime: question.answerTime,
+          answerTime: Number(question.answerTime),
           type: "answers",
           index: i,
         })),
@@ -277,6 +277,10 @@ export const quizRouter = createTRPCRouter({
           },
         },
       });
-      return { quiz, questions };
+      const questionsWithStringNums = questions.map((question) => ({
+        ...question,
+        answerTime: question.answerTime.toString(),
+      }));
+      return { quiz, questions: questionsWithStringNums };
     }),
 });

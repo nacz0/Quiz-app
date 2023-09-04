@@ -4,7 +4,7 @@ const savedDraftQuestionSchema = z.object({
   text: z.string().nullish(),
   ytLink: z.string().nullish(),
   image: z.string().nullish(),
-  answerTime: z.number().optional(),
+  answerTime: z.string().optional(),
   id: z.string().nullish(),
   type: z.enum(["answers", "true_false", "input", "slider"]).nullish(),
   answers: z

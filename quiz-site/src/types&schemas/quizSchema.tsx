@@ -5,7 +5,7 @@ const questionSchema = z
     text: z.string(),
     ytLink: z.string().optional(),
     image: z.string().optional(),
-    answerTime: z.number(),
+    answerTime: z.string(),
     type: z.enum(["answers", "true_false", "input", "slider"]),
     id: z.string().optional(),
     answers: z

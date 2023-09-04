@@ -16,7 +16,7 @@ export const defaultQuizValues = {
       text: "",
       ytLink: "",
       image: "",
-      answerTime: 20,
+      answerTime: "20",
       type: QuestionType.ANSWERS,
       answers: [
         {
