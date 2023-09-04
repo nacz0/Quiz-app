@@ -1,4 +1,5 @@
-import { QuizzesView } from "./QuizzesView";
+/*deprecated*/
+/*import { QuizzesView } from "./QuizzesView";
 
 type quiz = {
   title: string | null;
@@ -31,3 +32,4 @@ export function LocalQuizzes() {
     return null;
   }
 }
+*/
