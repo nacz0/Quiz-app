@@ -40,4 +40,27 @@ export const searchRouter = createTRPCRouter({
     const quizzes = await getQuiz(ctx, true);
     return quizzes;
   }),
+  getRecentQuizzes: publicProcedure.query(async ({ ctx }) => {
+    const quizzes = await ctx.prisma.quiz.findMany({
+      where: {
+        IsDraft: false,
+      },
+      select: {
+        _count: {
+          select: {
+            questions: true,
+          },
+        },
+        id: true,
+        title: true,
+        description: true,
+        image: true,
+      },
+      take: 3,
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return quizzes;
+  }),
 });
