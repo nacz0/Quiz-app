@@ -8,7 +8,7 @@ import { ImageInput } from "./ImageInput";
 import { UseSaveDraft } from "./UseSaveDraft";
 import { defaultQuizValues } from "./defaultQuizValues";
 import type { savedDraftQuizValues } from "~/types&schemas/savedDraftSchema";
-import type { DraftQuizValues } from "~/types&schemas/draftSchema";
+
 export function QuizWizard(props: {
   alreadySaved: boolean;
   draftData?: savedDraftQuizValues;
@@ -18,33 +18,32 @@ export function QuizWizard(props: {
     onSuccess: (data) => console.log(data),
   });
 
-  const setValues = UseSaveDraft(isLoading, isSuccess, alreadySaved);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [dummy, setDummy] = useState(0);
   const {
     register,
     handleSubmit,
     control,
-    getValues,
     setValue,
     reset,
+    watch,
     formState: { errors },
-  } = useForm<DraftQuizValues>({
+  } = useForm<savedDraftQuizValues>({
     defaultValues: defaultQuizValues,
     resolver: zodResolver(quizSchema),
   });
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "questions",
   });
+  UseSaveDraft(isLoading, isSuccess, alreadySaved, watch, setValue);
   useEffect(() => {
-    setValues(getValues);
-  });
-  console.log(getValues());
-  if (props.draftData) {
-    console.log(props.draftData);
-    reset(props.draftData);
-  }
+    if (props.draftData) {
+      reset(props.draftData);
+    }
+  }, [props.draftData, reset]);
+
   return (
     <div>
       <button type="button" onClick={() => reset(defaultQuizValues)}>
@@ -54,7 +53,10 @@ export function QuizWizard(props: {
       <form
         onSubmit={handleSubmit((data) => {
           console.log(quizSchema);
-          mutate(quizSchema.parse(data));
+          const quiz = quizSchema.parse(data);
+          console.log("submit");
+          console.log(quiz);
+          mutate(quiz);
         })}
       >
         <div className="flex gap-4">
@@ -76,7 +78,7 @@ export function QuizWizard(props: {
                   answers: [],
                   ytLink: "",
                   image: "",
-                  answerTime: 20,
+                  answerTime: "20",
                   type: "answers",
                 })
               }
