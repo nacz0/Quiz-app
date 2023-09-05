@@ -55,6 +55,11 @@ export const searchRouter = createTRPCRouter({
         title: true,
         description: true,
         image: true,
+        user: {
+          select: {
+            name: true,
+          },
+        },
       },
       take: 3,
       orderBy: {

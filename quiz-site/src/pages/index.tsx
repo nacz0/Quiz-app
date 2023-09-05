@@ -2,9 +2,10 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import Navbar from "~/components/Navbar";
+import { LastDrafts } from "~/components/index/LastDrafts";
 import { LastQuizzes } from "~/components/index/LastQuizzes";
-import { LocalQuizzes } from "~/components/index/LocalQuizzes";
-import { api } from "~/utils/api";
+import { RecentQuizzes } from "~/components/index/RecentQuizzes";
+import { SearchQuizzes } from "~/components/index/SearchQuizzes";
 
 export default function Home() {
   const { data: sessionData } = useSession();
@@ -19,23 +20,45 @@ export default function Home() {
         <Navbar />
         <div className=" flex   flex-col items-center  overflow-auto bg-white">
           <div className="mt-4 flex  h-full w-full flex-col items-center gap-2 px-4 ">
+            <>
+              <div className="w-full rounded-lg bg-teal-50 p-5  text-xl font-normal shadow-md">
+                {sessionData ? (
+                  <div>
+                    Witaj z powrotem,{" "}
+                    <Link
+                      href={`users/${sessionData.user.id}`}
+                      className=" text-amber-500"
+                    >
+                      {sessionData.user.name}
+                    </Link>
+                    !
+                  </div>
+                ) : (
+                  <div>
+                    Witaj na{" "}
+                    <span className="animate-leftToRight bg-gradient-to-r from-amber-500 to-teal-500 bg-[length:200%] bg-clip-text font-black text-transparent ">
+                      Quizzerze!
+                    </span>{" "}
+                    <button
+                      className="rounded-full bg-white/50 px-1"
+                      onClick={() => void signIn()}
+                    >
+                      Zaloguj się, lub załóż konto
+                    </button>
+                    , aby móc tworzyć quizy!
+                  </div>
+                )}
+              </div>
+            </>
+
+            <SearchQuizzes />
             {sessionData && (
               <>
-                <div className="w-full rounded-lg bg-teal-50 p-5  text-xl font-normal">
-                  Witaj z powrotem,{" "}
-                  <Link
-                    href={`users/${sessionData.user.id}`}
-                    className=" text-amber-500"
-                  >
-                    {sessionData.user.name}
-                  </Link>
-                  !
-                </div>
-
                 <LastQuizzes />
-                <LocalQuizzes />
+                <LastDrafts />
               </>
             )}
+            <RecentQuizzes />
             <AuthShowcase />
           </div>
         </div>
