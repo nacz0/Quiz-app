@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { PropsWithChildren } from "react";
 import { BgIcon } from "~/svg/bg";
 import { LogoIcon } from "~/svg/logo";
 
@@ -8,6 +7,9 @@ type data = {
   description: string | null;
   image: string | null;
   id: string | null;
+  user?: {
+    name: string | null;
+  } | null;
   _count: {
     questions: number;
   } | null;
@@ -15,7 +17,7 @@ type data = {
 
 export function QuizzesView(props: {
   data: data | null | undefined;
-  type: "quiz" | "draft";
+  type: "quiz" | "draft" | "recent";
 }) {
   const { data, type } = props;
 
@@ -67,12 +69,20 @@ export function QuizzesView(props: {
           </div>
           <div className="flex h-4 w-full bg-teal-100/80 ">
             {quiz ? (
-              quiz._count && (
-                <div className="ml-3 text-xs font-medium">
-                  {quiz._count.questions}{" "}
-                  {quiz._count.questions > 1 ? "pytań" : "pytanie"}
-                </div>
-              )
+              <>
+                {quiz._count && (
+                  <div className="ml-3 text-xs font-medium">
+                    {quiz._count.questions}{" "}
+                    {quiz._count.questions > 1 ? "pytań" : "pytanie"}
+                  </div>
+                )}
+                {quiz.user && (
+                  <div className="ml-3 flex flex-row items-center text-xs    font-bold ">
+                    <div className="mr-3 h-3 border-l border-gray-700"></div>
+                    {quiz.user.name}
+                  </div>
+                )}
+              </>
             ) : (
               <div className="ml-3 mt-1 h-2 w-40 animate-pulse bg-gray-500 text-xs font-medium"></div>
             )}
@@ -88,9 +98,9 @@ export function QuizzesView(props: {
     return (
       <div className="flex w-full flex-col gap-5 	  rounded-lg bg-teal-50 p-5 font-normal shadow-md">
         <span className="text-xl font-bold">
-          {type === "quiz"
-            ? "Twoje ostatnio stworzone quizy:"
-            : "Twoje wersje robocze quizzów:"}
+          {type === "quiz" && "Twoje ostatnio stworzone quizy:"}
+          {type === "draft" && "Twoje wersje robocze quizzów:"}
+          {type === "recent" && "Ostatnio stworzone quizzy:"}
         </span>
         <div className="flex flex-col gap-2">
           {data
