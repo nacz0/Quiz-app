@@ -28,7 +28,7 @@ export function QuizzesView(props: {
     return (
       <>
         {props.image ? (
-          <div>
+          <div className="basis-1/5">
             <div className="relative  flex h-20 w-20 items-center  ">
               <Image
                 className=" object-cover "
@@ -55,8 +55,8 @@ export function QuizzesView(props: {
     const { quiz } = props;
     return (
       <div className=" box-content flex h-20  flex-row justify-between  overflow-hidden rounded-xl border border-gray-600 ">
-        <div className="flex w-full flex-col justify-between">
-          <div className="line-clamp-2 flex   w-4/5 text-ellipsis   px-3   text-lg font-semibold ">
+        <div className="flex  basis-4/5 flex-col justify-between ">
+          <div className="mt-1 line-clamp-2 flex w-4/5    text-ellipsis break-all    px-3   text-lg font-semibold ">
             {quiz ? (
               quiz.title !== "" ? (
                 quiz.title
@@ -96,7 +96,7 @@ export function QuizzesView(props: {
   function View(props: { data: data | undefined | null }) {
     const { data } = props;
     return (
-      <div className="flex w-full flex-col gap-5 	  rounded-lg bg-teal-50 p-5 font-normal shadow-md">
+      <div className="flex w-full flex-col gap-5 	  rounded-lg bg-white p-5 font-normal shadow-md">
         <span className="text-xl font-bold">
           {type === "quiz" && "Twoje ostatnio stworzone quizy:"}
           {type === "draft" && "Twoje wersje robocze quizzów:"}

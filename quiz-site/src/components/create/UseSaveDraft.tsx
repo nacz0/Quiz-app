@@ -19,9 +19,13 @@ export function UseSaveDraft(
   useEffect(() => {
     if (isLoading || isSuccess) return;
     const debounced = debounce((formValue: unknown) => {
-      const parsed = savedDraftQuizSchema.parse(formValue);
-      console.log(parsed);
-      mutate(parsed);
+      try {
+        const parsed = savedDraftQuizSchema.parse(formValue);
+        console.log(parsed);
+        /*mutate(parsed);*/
+      } catch (e) {
+        null;
+      }
     }, 5000);
     const subscription = watch(debounced);
     return () => {

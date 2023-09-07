@@ -19,9 +19,11 @@ export function ImageInput(props: {
   };
   return (
     <>
-      <label htmlFor="fileInput" className=" cursor-pointer">
+      <label htmlFor="fileInput" className=" w-fit cursor-pointer">
         <div className="">
-          <span className="text-xs font-semibold">IMAGE</span>
+          <span className=" rounded-lg border-2 border-amber-300 bg-amber-200 p-1 text-sm font-semibold">
+            Zmień
+          </span>
         </div>
       </label>
       <input

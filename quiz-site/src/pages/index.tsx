@@ -18,10 +18,10 @@ export default function Home() {
       </Head>
       <main>
         <Navbar />
-        <div className=" flex   flex-col items-center  overflow-auto bg-white">
+        <div className=" flex   flex-col items-center  overflow-auto bg-teal-50">
           <div className="mt-4 flex  h-full w-full flex-col items-center gap-2 px-4 ">
             <>
-              <div className="w-full rounded-lg bg-teal-50 p-5  text-xl font-normal shadow-md">
+              <div className="w-full rounded-lg bg-white p-5  text-xl font-normal shadow-md">
                 {sessionData ? (
                   <div>
                     Witaj z powrotem,{" "}
@@ -38,9 +38,9 @@ export default function Home() {
                     Witaj na{" "}
                     <span className="animate-leftToRight bg-gradient-to-r from-amber-500 to-teal-500 bg-[length:200%] bg-clip-text font-black text-transparent ">
                       Quizzerze!
-                    </span>{" "}
+                    </span>
                     <button
-                      className="rounded-full bg-white/50 px-1"
+                      className="rounded-full bg-white/50 "
                       onClick={() => void signIn()}
                     >
                       Zaloguj się, lub załóż konto
