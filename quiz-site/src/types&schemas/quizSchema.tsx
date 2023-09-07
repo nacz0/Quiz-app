@@ -1,8 +1,8 @@
 import { z } from "zod";
-
+import { quizMaxLength } from "./quizMaxLength";
 const questionSchema = z
   .object({
-    text: z.string(),
+    text: z.string().max(quizMaxLength.question.text),
     ytLink: z.string().optional(),
     image: z.string().optional(),
     answerTime: z.string(),
@@ -12,7 +12,7 @@ const questionSchema = z
       .array(
         z
           .object({
-            text: z.string().optional(),
+            text: z.string().max(quizMaxLength.answer.text).optional(),
             isCorrect: z.boolean().optional(),
             image: z.string().optional(),
             id: z.string().optional(),
@@ -74,8 +74,11 @@ const questionSchema = z
 
 export const quizSchema = z.object({
   quiz: z.object({
-    title: z.string().min(1, { message: "Title is required" }).max(250),
-    description: z.string().optional(),
+    title: z
+      .string()
+      .min(1, { message: "Title is required" })
+      .max(quizMaxLength.quiz.title),
+    description: z.string().max(quizMaxLength.quiz.description).optional(),
     image: z.string().optional(),
     id: z.string(),
   }),
