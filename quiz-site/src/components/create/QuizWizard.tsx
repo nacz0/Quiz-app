@@ -1,13 +1,14 @@
-import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SingleAnswer } from "./SingleAnswer";
 import { useEffect, useState } from "react";
-import { quizSchema } from "../../types&schemas/quizSchema";
+import { useFieldArray, useForm } from "react-hook-form";
+import type { savedDraftQuizValues } from "~/types&schemas/savedDraftSchema";
 import { api } from "~/utils/api";
-import { ImageInput } from "./ImageInput";
+import { quizSchema } from "../../types&schemas/quizSchema";
+import { CreateNavBar } from "./CreateNavbar";
+import QuestionCarousel from "./QuestionCarousel";
+import { SingleAnswer } from "./SingleAnswer";
 import { UseSaveDraft } from "./UseSaveDraft";
 import { defaultQuizValues } from "./defaultQuizValues";
-import type { savedDraftQuizValues } from "~/types&schemas/savedDraftSchema";
 
 export function QuizWizard(props: {
   alreadySaved: boolean;
@@ -22,17 +23,17 @@ export function QuizWizard(props: {
   const [dummy, setDummy] = useState(0);
   const {
     register,
-    handleSubmit,
-    control,
-    setValue,
     reset,
+    setValue,
+    control,
     watch,
+    handleSubmit,
     formState: { errors },
   } = useForm<savedDraftQuizValues>({
     defaultValues: defaultQuizValues,
     resolver: zodResolver(quizSchema),
   });
-
+  control;
   const { fields, append, remove } = useFieldArray({
     control,
     name: "questions",
@@ -43,67 +44,36 @@ export function QuizWizard(props: {
       reset(props.draftData);
     }
   }, [props.draftData, reset]);
-
   return (
-    <div>
-      <button type="button" onClick={() => reset(defaultQuizValues)}>
-        reset
-      </button>
-      <button onClick={() => setDummy(dummy + 1)}>+1</button>
-      <form
-        onSubmit={handleSubmit((data) => {
-          console.log(quizSchema);
-          const quiz = quizSchema.parse(data);
-          console.log("submit");
-          console.log(quiz);
-          mutate(quiz);
-        })}
-      >
-        <div className="flex gap-4">
-          <div className="flex flex-col bg-yellow-300 p-3">
-            {fields.map((field, index) => (
-              <button
-                type="button"
-                onClick={() => setCurrentQuestion(index)}
-                key={field.id}
-              >
-                {index}
-              </button>
-            ))}
-            <button
-              type="button"
-              onClick={() =>
-                append({
-                  text: "",
-                  answers: [],
-                  ytLink: "",
-                  image: "",
-                  answerTime: "20",
-                  type: "answers",
-                })
-              }
-            >
-              Add Question
-            </button>
-          </div>
-          <div className="flex flex-col gap-4">
-            <input {...register("quiz.title")}></input>
-            {errors.quiz?.title && <p>{errors.quiz.title.message}</p>}
-            <input {...register("quiz.description")}></input>
-            {errors.quiz?.description && (
-              <p>{errors.quiz.description.message}</p>
-            )}
-            <ImageInput input="quiz.image" setValue={setValue} />
-            {errors.quiz?.image && <p>{errors.quiz.image.message}</p>}
-          </div>
-          <button type="submit">submit</button>
-          <SingleAnswer
-            setValue={setValue}
-            register={register}
-            currentQuestion={currentQuestion}
-          />
-        </div>
-      </form>
-    </div>
+    <form
+      onSubmit={handleSubmit((data) => {
+        console.log(quizSchema);
+        const quiz = quizSchema.parse(data);
+        console.log("submit");
+        console.log(quiz);
+        mutate(quiz);
+      })}
+      className=" h-screen w-full overflow-hidden bg-[url('/bgCreate.svg')] 	"
+    >
+      <CreateNavBar
+        errors={errors}
+        register={register}
+        setValue={setValue}
+        control={control}
+      />
+      <div className="mt-8 flex  h-full w-full flex-col items-center  px-4">
+        <SingleAnswer
+          setValue={setValue}
+          register={register}
+          currentQuestion={currentQuestion}
+          control={control}
+        />
+      </div>
+      <QuestionCarousel
+        fields={fields}
+        setCurrentQuestion={setCurrentQuestion}
+        append={append}
+      />
+    </form>
   );
 }

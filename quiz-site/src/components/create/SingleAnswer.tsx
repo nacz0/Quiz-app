@@ -1,51 +1,27 @@
-import { type UseFormSetValue, type UseFormRegister } from "react-hook-form";
-import { ImageInput } from "./ImageInput";
+import {
+  Control,
+  type UseFormRegister,
+  type UseFormSetValue,
+} from "react-hook-form";
 import type { savedDraftQuizValues } from "~/types&schemas/savedDraftSchema";
+import { ResizableInput } from "./resizableInput";
 
 export function SingleAnswer(props: {
   currentQuestion: number;
   register: UseFormRegister<savedDraftQuizValues>;
   setValue: UseFormSetValue<savedDraftQuizValues>;
+  control: Control<savedDraftQuizValues>;
 }) {
-  const { currentQuestion, register, setValue } = props;
+  const { currentQuestion, register, setValue, control } = props;
   const numOfAnswers = [0, 1, 2, 3];
 
   return (
-    <div>
-      <div className="flex flex-col gap-3">
-        <input
-          key={`questions.${currentQuestion}.text`}
-          {...register(`questions.${currentQuestion}.text`)}
-          placeholder="Question text"
-        ></input>
-        <input
-          key={`questions.${currentQuestion}.ytLink`}
-          {...register(`questions.${currentQuestion}.ytLink`)}
-          placeholder="Youtube link"
-        ></input>
-        <ImageInput
-          input={`questions.${currentQuestion}.image`}
-          setValue={setValue}
-        />
-        <input
-          type="number"
-          min={0}
-          max={40}
-          key={`questions.${currentQuestion}.anwerTime`}
-          {...register(`questions.${currentQuestion}.answerTime`)}
-          placeholder="Answer time"
-        ></input>
-        <select
-          key={`questions.${currentQuestion}.type`}
-          {...register(`questions.${currentQuestion}.type`)}
-          placeholder="type"
-        >
-          <option value="answers">Answers</option>
-          <option value="true_false">Text</option>
-          <option value="input">Image</option>
-          <option value="slider">Youtube</option>
-        </select>
-      </div>
+    <div className="flex h-full w-full flex-col items-center ">
+      <ResizableInput
+        control={control}
+        currentQuestion={currentQuestion}
+        register={register}
+      />
       <div className="flex flex-col gap-4 bg-red-400 p-4">
         {numOfAnswers.map((answer) => (
           <div className="flex flex-row gap-3" key={answer}>
