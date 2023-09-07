@@ -1,4 +1,4 @@
-export function LogoIcon() {
+export function LogoIcon(props: { size?: number }) {
   return (
     <svg
       version="1.1"
@@ -7,8 +7,8 @@ export function LogoIcon() {
       x="0px"
       y="0px"
       viewBox="0 0 4000 4000"
-      height={56}
-      width={56}
+      height={props.size ?? 56}
+      width={props.size ?? 56}
     >
       <g>
         <g>
