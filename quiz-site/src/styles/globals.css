@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  @apply bg-white;
+  @apply bg-teal-50;
   @apply text-gray-700;
 }
 
@@ -13,12 +13,4 @@ button {
 
 input {
   outline: none;
-}
-@layer utilities {
-  .border-spin {
-    @apply relative flex items-center justify-center overflow-hidden rounded-md bg-teal-50 p-2 
-       before:absolute  before:hidden before:h-[50%] before:w-[150%] 
-      before:rounded-full before:bg-red-200 after:absolute after:inset-1  after:rounded-sm after:bg-teal-50 
-      hover:before:flex hover:before:animate-spin;
-  }
 }
