@@ -20,7 +20,6 @@ export function QuizWizard(props: {
   });
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [dummy, setDummy] = useState(0);
   const {
     register,
     reset,
@@ -28,12 +27,12 @@ export function QuizWizard(props: {
     control,
     watch,
     handleSubmit,
+    trigger,
     formState: { errors },
   } = useForm<savedDraftQuizValues>({
     defaultValues: defaultQuizValues,
     resolver: zodResolver(quizSchema),
   });
-  control;
   const { fields, append, remove } = useFieldArray({
     control,
     name: "questions",
@@ -45,35 +44,42 @@ export function QuizWizard(props: {
     }
   }, [props.draftData, reset]);
   return (
-    <form
-      onSubmit={handleSubmit((data) => {
-        console.log(quizSchema);
-        const quiz = quizSchema.parse(data);
-        console.log("submit");
-        console.log(quiz);
-        mutate(quiz);
-      })}
-      className=" h-screen w-full overflow-hidden bg-[url('/bgCreate.svg')] 	"
-    >
-      <CreateNavBar
-        errors={errors}
-        register={register}
-        setValue={setValue}
-        control={control}
-      />
-      <div className="mt-8 flex  h-full w-full flex-col items-center  px-4">
-        <SingleAnswer
-          setValue={setValue}
+    <main className="relative h-full min-h-[92vh]  w-full overflow-x-hidden  bg-[url('/bgCreate.svg')] ">
+      <form
+        onSubmit={handleSubmit((data) => {
+          console.log(quizSchema);
+          const quiz = quizSchema.parse(data);
+          console.log("submit");
+          console.log(quiz);
+          mutate(quiz);
+        })}
+        className="	overflow-x-hidden"
+      >
+        <CreateNavBar
+          errors={errors}
           register={register}
-          currentQuestion={currentQuestion}
+          setValue={setValue}
           control={control}
         />
-      </div>
-      <QuestionCarousel
-        fields={fields}
-        setCurrentQuestion={setCurrentQuestion}
-        append={append}
-      />
-    </form>
+        <div className=" flex w-full  flex-col    items-center overflow-y-auto overflow-x-hidden px-4 pb-24   pt-4">
+          <SingleAnswer
+            setValue={setValue}
+            register={register}
+            currentQuestion={currentQuestion}
+            control={control}
+            trigger={trigger}
+          />
+        </div>
+        <QuestionCarousel
+          fields={fields}
+          setCurrentQuestion={setCurrentQuestion}
+          append={append}
+          errors={errors}
+          trigger={trigger}
+          control={control}
+          currentQuestion={currentQuestion}
+        />
+      </form>
+    </main>
   );
 }
