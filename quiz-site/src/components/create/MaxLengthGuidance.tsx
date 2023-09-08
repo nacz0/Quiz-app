@@ -3,7 +3,6 @@ export function MaxLengthGuidance(props: {
   maxLength: number;
 }) {
   const { text, maxLength } = props;
-  console.log(text, maxLength - text!.length);
   return (
     <div
       className={`${

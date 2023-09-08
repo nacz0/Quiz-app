@@ -6,6 +6,7 @@ export function ImageInput(props: {
   setValue: UseFormSetValue<savedDraftQuizValues>;
   input: "quiz.image" | `questions.${number}.image`;
 }) {
+  console.log(props.input);
   const { setValue, input } = props;
   const handleFileInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -27,6 +28,7 @@ export function ImageInput(props: {
         </div>
       </label>
       <input
+        key={input}
         id="fileInput"
         type="file"
         accept=".jpg, .jpeg, .png"
