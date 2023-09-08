@@ -2,10 +2,13 @@ import { z } from "zod";
 import { quizMaxLength } from "./quizMaxLength";
 const questionSchema = z
   .object({
-    text: z.string().max(quizMaxLength.question.text),
+    text: z
+      .string()
+      .max(quizMaxLength.question.text)
+      .min(1, { message: "Question is required" }),
     ytLink: z.string().optional(),
-    image: z.string().optional(),
-    answerTime: z.string(),
+    image: z.string().nullish(),
+    answerTime: z.string().optional(),
     type: z.enum(["answers", "true_false", "input", "slider"]),
     id: z.string().optional(),
     answers: z
@@ -14,29 +17,20 @@ const questionSchema = z
           .object({
             text: z.string().max(quizMaxLength.answer.text).optional(),
             isCorrect: z.boolean().optional(),
-            image: z.string().optional(),
+            image: z.string().nullish(),
             id: z.string().optional(),
           })
+
           .superRefine(({ text, image }, ctx) => {
             if (
-              text !== undefined &&
+              text != undefined &&
               text !== "" &&
-              image !== undefined &&
+              image != undefined &&
               image !== ""
             ) {
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
                 message: "Answer must not have an image and text",
-                path: ["text", "image"],
-              });
-            }
-            if (
-              (text === undefined || text === "") &&
-              (image === undefined || image === "")
-            ) {
-              ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: "Answer must have an image or some text",
                 path: ["text", "image"],
               });
             }
@@ -51,8 +45,29 @@ const questionSchema = z
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: "Question must have a correct answer",
-            path: ["answers"],
           });
+        }
+        for (let i = 0; i < 2; i++) {
+          if (answers[i]) {
+            if (
+              (answers[i]!.text === undefined || answers[i]!.text === "") &&
+              (answers[i]!.image === undefined || answers[i]!.image === "")
+            ) {
+              console.log(`${i}'s answer must not be empty`);
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: "Question must have at least two answers",
+                path: [`${i}`],
+              });
+            }
+          } else {
+            console.log("must have at least two answers");
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: "Question must have at least two answers",
+              path: ["answers"],
+            });
+          }
         }
       }),
   })
