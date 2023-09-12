@@ -118,6 +118,7 @@ export default function QuestionCarousel(props: QuestionCarouselProps) {
       >
         <PlusIcon size={20} />
       </button>
+      <button type="submit">submit</button>
     </div>
   );
 }

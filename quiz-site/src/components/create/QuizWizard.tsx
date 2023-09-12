@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import type { savedDraftQuizValues } from "~/types&schemas/savedDraftSchema";
@@ -14,9 +15,10 @@ export function QuizWizard(props: {
   alreadySaved: boolean;
   draftData?: savedDraftQuizValues;
 }) {
+  const router = useRouter();
   const { alreadySaved } = props;
   const { mutate, isLoading, isSuccess } = api.quiz.createQuiz.useMutation({
-    onSuccess: (data) => console.log(data),
+    onSuccess: (id) => void router.push(`/quiz/${id}`),
   });
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
