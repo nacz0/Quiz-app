@@ -1,9 +1,9 @@
-import Head from "next/head";
 import type { GetStaticProps, NextPage } from "next";
+import Head from "next/head";
 import { Start } from "~/components/start/Start";
 import { api } from "~/utils/api";
 const PlayPage: NextPage<{ id: string }> = ({ id }) => {
-  const { data, isLoading } = api.quiz.getQuizById.useQuery(id);
+  const { data, isLoading } = api.search.getQuizById.useQuery({ id });
   if (isLoading) {
     console.log("loading");
     return <div>loading...</div>;

@@ -1,11 +1,7 @@
 import type { Prisma, PrismaClient } from "@prisma/client";
 import type { DefaultArgs } from "@prisma/client/runtime/library";
 import { z } from "zod";
-import {
-  createTRPCRouter,
-  publicProcedure,
-  protectedProcedure,
-} from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { draftQuizSchema } from "~/types&schemas/draftSchema";
 import { quizSchema, type QuizFormValues } from "~/types&schemas/quizSchema";
 import {
@@ -164,7 +160,7 @@ export const quizRouter = createTRPCRouter({
           }
         })
       );
-      return;
+      return input.quiz.id;
     }),
   createDraftQuiz: protectedProcedure
     .input(draftQuizSchema)
@@ -218,27 +214,6 @@ export const quizRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       await saveQuiz(input, ctx, true);
       return;
-    }),
-  getQuizById: publicProcedure
-    .input(z.string())
-    .query(async ({ input, ctx }) => {
-      const quiz = await ctx.prisma.quiz.findFirst({
-        where: {
-          id: input,
-          IsDraft: false,
-        },
-        include: {
-          questions: {
-            include: {
-              answers: true,
-            },
-          },
-        },
-      });
-      if (!quiz) {
-        throw new Error("Quiz not found");
-      }
-      return quiz;
     }),
   getDraftQuizById: protectedProcedure
     .input(z.string())
