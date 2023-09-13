@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { BgIcon } from "~/svg/bg";
 import { LogoIcon } from "~/svg/logo";
 
@@ -28,15 +29,13 @@ export function QuizzesView(props: {
     return (
       <>
         {props.image ? (
-          <div className="basis-1/5">
-            <div className="relative  flex h-20 w-20 items-center  ">
-              <Image
-                className=" object-cover "
-                src={props.image}
-                alt={props.title ?? "Quiz image"}
-                fill={true}
-              ></Image>
-            </div>
+          <div className="relative  flex h-20 w-20 items-center  ">
+            <Image
+              className=" object-cover "
+              src={props.image}
+              alt={props.title ?? "Quiz image"}
+              fill={true}
+            ></Image>
           </div>
         ) : (
           <div className="relative  flex h-20 w-20 items-center opacity-70">
@@ -53,43 +52,61 @@ export function QuizzesView(props: {
   }
   function Quiz(props: { quiz: data[number] | undefined }) {
     const { quiz } = props;
-    return (
-      <div className=" box-content flex h-20  flex-row justify-between  overflow-hidden rounded-xl border border-gray-600 ">
-        <div className="flex  basis-4/5 flex-col justify-between ">
-          <div className="mt-1 line-clamp-2 flex w-4/5    text-ellipsis break-all    px-3   text-lg font-semibold ">
-            {quiz ? (
-              quiz.title !== "" ? (
-                quiz.title
+    function QuizContent() {
+      return (
+        <>
+          <div className="flex  basis-4/5 flex-col justify-between ">
+            <div className="mt-1 line-clamp-2 flex w-4/5    text-ellipsis break-all    px-3   text-lg font-semibold ">
+              {quiz ? (
+                quiz.title !== "" ? (
+                  quiz.title
+                ) : (
+                  "Bez tytułu"
+                )
               ) : (
-                "Bez tytułu"
-              )
-            ) : (
-              <div className="mt-2 h-4 w-full animate-pulse bg-gray-500 "></div>
-            )}
+                <div className="mt-2 h-4 w-full animate-pulse bg-gray-500 "></div>
+              )}
+            </div>
+            <div className="flex h-4 w-full bg-teal-100/80 ">
+              {quiz ? (
+                <>
+                  {quiz._count && (
+                    <div className="ml-3 text-xs font-medium">
+                      {quiz._count.questions}{" "}
+                      {quiz._count.questions > 1 ? "pytań" : "pytanie"}
+                    </div>
+                  )}
+                  {quiz.user && (
+                    <div className="ml-3 flex flex-row items-center text-xs    font-bold ">
+                      <div className="mr-3 h-3 border-l border-gray-700"></div>
+                      {quiz.user.name}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="ml-3 mt-1 h-2 w-40 animate-pulse bg-gray-500 text-xs font-medium"></div>
+              )}
+            </div>
           </div>
-          <div className="flex h-4 w-full bg-teal-100/80 ">
-            {quiz ? (
-              <>
-                {quiz._count && (
-                  <div className="ml-3 text-xs font-medium">
-                    {quiz._count.questions}{" "}
-                    {quiz._count.questions > 1 ? "pytań" : "pytanie"}
-                  </div>
-                )}
-                {quiz.user && (
-                  <div className="ml-3 flex flex-row items-center text-xs    font-bold ">
-                    <div className="mr-3 h-3 border-l border-gray-700"></div>
-                    {quiz.user.name}
-                  </div>
-                )}
-              </>
-            ) : (
-              <div className="ml-3 mt-1 h-2 w-40 animate-pulse bg-gray-500 text-xs font-medium"></div>
-            )}
+          <ImageView image={quiz?.image} title={quiz?.title} />
+        </>
+      );
+    }
+    return (
+      <>
+        {quiz ? (
+          <Link
+            href={`quiz/${quiz?.id}`}
+            className=" box-content flex h-20  flex-row justify-between  overflow-hidden rounded-xl border border-gray-600 "
+          >
+            <QuizContent />
+          </Link>
+        ) : (
+          <div className=" box-content flex h-20  flex-row justify-between  overflow-hidden rounded-xl border border-gray-600 ">
+            <QuizContent />
           </div>
-        </div>
-        <ImageView image={quiz?.image} title={quiz?.title} />
-      </div>
+        )}
+      </>
     );
   }
 
