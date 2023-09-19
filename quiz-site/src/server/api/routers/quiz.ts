@@ -25,38 +25,35 @@ async function saveQuiz(
       IsDraft: saveAsDraft,
     },
   });
-  input.questions.map(async (question, i) => {
-    await ctx.prisma.question.upsert({
-      where: {
-        unique_quiz_index: {
-          index: i,
-          quizId: input.quiz.id,
+  const questions = await Promise.all(
+    input.questions.map(async (question, i) => {
+      const q = await ctx.prisma.question.upsert({
+        where: {
+          unique_quiz_index: {
+            index: i,
+            quizId: input.quiz.id,
+          },
         },
-      },
-      update: {
-        text: question.text,
-        ytLink: question.ytLink,
-        image: question.image,
-        answerTime: Number(question.answerTime),
-        type: "answers",
-      },
-      create: {
-        text: question.text,
-        ytLink: question.ytLink,
-        image: question.image,
-        answerTime: Number(question.answerTime),
-        type: "answers",
-        quizId: input.quiz.id,
-        index: i,
-      },
-    });
-  });
-
-  const questions = await ctx.prisma.question.findMany({
-    where: {
-      quizId: input.quiz.id,
-    },
-  });
+        update: {
+          text: question.text,
+          ytLink: question.ytLink,
+          image: question.image,
+          answerTime: Number(question.answerTime),
+          type: "answers",
+        },
+        create: {
+          text: question.text,
+          ytLink: question.ytLink,
+          image: question.image,
+          answerTime: Number(question.answerTime),
+          type: "answers",
+          quizId: input.quiz.id,
+          index: i,
+        },
+      });
+      return q;
+    })
+  );
 
   input.questions.map((question, index) =>
     question.answers.map(async (answer, i) => {
@@ -101,42 +98,48 @@ export const quizRouter = createTRPCRouter({
           IsDraft: false,
         },
       });
-      input.questions.map(async (question, i) => {
-        await ctx.prisma.question.upsert({
-          where: {
-            unique_quiz_index: {
-              index: i,
-              quizId: input.quiz.id,
+
+      const questions = await Promise.all(
+        input.questions.map(async (question, i) => {
+          const q = await ctx.prisma.question.upsert({
+            where: {
+              unique_quiz_index: {
+                index: i,
+                quizId: input.quiz.id,
+              },
             },
-          },
-          update: {
-            text: question.text,
-            ytLink: question.ytLink,
-            image: question.image,
-            answerTime: Number(question.answerTime),
-            type: "answers",
-          },
-          create: {
-            text: question.text,
-            ytLink: question.ytLink,
-            image: question.image,
-            answerTime: Number(question.answerTime),
-            type: "answers",
-            quizId: input.quiz.id,
-            index: i,
-          },
-        });
-      });
+            update: {
+              text: question.text,
+              ytLink: question.ytLink,
+              image: question.image,
+              answerTime: Number(question.answerTime),
+              type: "answers",
+            },
+            create: {
+              text: question.text,
+              ytLink: question.ytLink,
+              image: question.image,
+              answerTime: Number(question.answerTime),
+              type: "answers",
+              quizId: input.quiz.id,
+              index: i,
+            },
+          });
+          return q;
+        })
+      );
 
-      const questions = await ctx.prisma.question.findMany({
-        where: {
-          quizId: input.quiz.id,
-        },
-      });
-
-      input.questions.map((question, index) =>
+      console.log("QUESTIONS");
+      console.log(questions);
+      input.questions.map((question, index) => {
+        console.log("QuestionnnnnnnnnnNNNNNNNNNNN");
+        console.log(question);
+        console.log(index);
         question.answers.map(async (answer, i) => {
           if (questions[index]) {
+            console.log("ANSWERRRRRRRRRRRR");
+            console.log(answer);
+            console.log(questions[index]!.id);
             await ctx.prisma.answer.upsert({
               where: {
                 unique_question_index: {
@@ -158,8 +161,8 @@ export const quizRouter = createTRPCRouter({
               },
             });
           }
-        })
-      );
+        });
+      });
       return input.quiz.id;
     }),
   createDraftQuiz: protectedProcedure
@@ -198,7 +201,7 @@ export const quizRouter = createTRPCRouter({
           if (questions[index]) {
             await ctx.prisma.answer.create({
               data: {
-                text: answer.text ?? "ddd",
+                text: answer.text,
                 isCorrect: answer.isCorrect ?? false,
                 questionId: questions[index]!.id,
                 index: i,
