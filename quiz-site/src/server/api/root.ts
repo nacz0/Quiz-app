@@ -1,5 +1,6 @@
 import { quizRouter } from "~/server/api/routers/quiz";
 import { createTRPCRouter } from "~/server/api/trpc";
+import { gameRouter } from "./routers/game";
 import { searchRouter } from "./routers/search";
 
 /**
@@ -10,6 +11,7 @@ import { searchRouter } from "./routers/search";
 export const appRouter = createTRPCRouter({
   quiz: quizRouter,
   search: searchRouter,
+  game: gameRouter,
 });
 
 // export type definition of API
