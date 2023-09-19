@@ -1,14 +1,14 @@
 import {
+  useCallback,
+  useEffect,
+  useState,
   type Dispatch,
   type SetStateAction,
-  useEffect,
-  useCallback,
-  useState,
 } from "react";
-import type { User, question } from "./Start";
 import { socket } from "~/socket/socket";
 import { type gameStates } from "~/types&schemas/gameStates";
 import { Timer } from "../Timer";
+import type { User, question } from "./Start";
 export function Question(props: {
   question: question;
   pin: string;
@@ -21,6 +21,7 @@ export function Question(props: {
     props;
 
   const [time, setTime] = useState<number>(0);
+  const [usersAnswered, setUsersAnswered] = useState<string[]>([]);
   useEffect(() => {
     setTime(Date.now());
   }, []);
@@ -32,16 +33,23 @@ export function Question(props: {
   }, [pin, setCurrentQuestion, setGameState]);
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
+    /*const timeout = setTimeout(() => {
       handleEndQuestion();
     }, 1000 * 5);
     return () => {
       clearTimeout(timeout);
-    };
+    };*/
   }, [handleEndQuestion, pin]);
 
   useEffect(() => {
     socket.on("answer_sent", (username, answer) => {
+      console.log("answer_sent");
+      console.log(usersAnswered);
+      if (usersAnswered.includes(username)) {
+        console.log("already answered");
+        return;
+      }
+      setUsersAnswered((usersAnswered) => [...usersAnswered, username]);
       console.log(username, answer);
       const timeElapsed = Math.round((Date.now() - time) / 1000);
       const score = ((20 - timeElapsed) / 20) * 500 + 500;
@@ -60,7 +68,7 @@ export function Question(props: {
     return () => {
       socket.off("answer_sent");
     };
-  }, [question, setUsers, time]);
+  }, [question, setUsers, time, usersAnswered]);
 
   return (
     <div>
