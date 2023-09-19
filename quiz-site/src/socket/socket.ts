@@ -1,4 +1,4 @@
-import { type Socket, io } from "socket.io-client";
+import { io, type Socket } from "socket.io-client";
 import type { question } from "../components/start/Start";
 interface ServerToHostClientEvents {
   user_joined: (username: string) => void;
@@ -7,7 +7,7 @@ interface ServerToHostClientEvents {
   game_started: (pin: string) => void;
 }
 interface ServerToUserClientEvents {
-  user_exists: () => void;
+  is_valid_user: (b: boolean) => void;
   game_started_client: () => void;
   next_question_client: () => void;
   next_data_client: (question: question) => void;

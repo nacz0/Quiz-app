@@ -21,7 +21,7 @@ interface ServerToHostClientEvents {
   game_started: (pin: string) => void;
 }
 interface ServerToUserClientEvents {
-  user_exists: () => void;
+  is_valid_user: (b: boolean) => void;
   game_started_client: () => void;
   next_question_client: () => void;
   next_data_client: (question: question) => void;
@@ -75,15 +75,28 @@ io.on("connection", (socket) => {
     dd.set(pin, socket.id);
     if (Users.has(pin)) {
       console.log(Users.get(pin));
-      if (Users.get(pin).find((user: string) => user === username)) {
-        socket.emit("user_exists");
+
+      if (
+        Users.get(pin).find((user: string) => user === username) ||
+        username === ""
+      ) {
+        socket.emit("is_valid_user", false);
         return;
       } else {
         Users.set(pin, [...Users.get(pin), username]);
+        socket.emit("is_valid_user", true);
       }
     } else {
+      if (username === "") {
+        socket.emit("is_valid_user", false);
+        console.log("username" + username);
+        console.log(typeof username);
+        return;
+      }
       Users.set(pin, [username]);
+      socket.emit("is_valid_user", true);
     }
+
     socket.join(pin);
     const host = Hosts.get(pin);
     io.to(host).emit("user_joined", username);
