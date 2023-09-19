@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { api } from "~/utils/api";
 
 export function QuizView(props: { id: string }) {
@@ -18,6 +19,7 @@ export function QuizView(props: { id: string }) {
       {quiz.image && (
         <Image width={100} height={100} src={quiz.image} alt="quiz image" />
       )}
+      <Link href={`/start/${quiz.id}`}>Start</Link>
     </div>
   );
 }

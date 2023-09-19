@@ -46,7 +46,7 @@ export function QuizWizard(props: {
     }
   }, [props.draftData, reset]);
   return (
-    <main className="relative h-full min-h-[92vh]  w-full overflow-x-hidden  bg-[url('/bgCreate.svg')] ">
+    <main className="relative h-full min-h-[92vh]  w-full overflow-x-hidden  bg-[url('/bgCreate.svg')] bg-contain ">
       <form
         onSubmit={handleSubmit((data) => {
           console.log(quizSchema);

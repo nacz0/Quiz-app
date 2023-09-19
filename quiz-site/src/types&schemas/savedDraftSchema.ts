@@ -20,6 +20,8 @@ const savedDraftQuestionSchema = z.object({
     .max(4),
 });
 
+export type savedDraftQuestionValues = z.infer<typeof savedDraftQuestionSchema>;
+
 export const savedDraftQuizSchema = z.object({
   quiz: z.object({
     title: z.string().max(250).nullish(),
