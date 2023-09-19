@@ -6,11 +6,3 @@ body {
   @apply bg-teal-50;
   @apply text-gray-700;
 }
-
-button {
-  outline: none;
-}
-
-input {
-  outline: none;
-}
